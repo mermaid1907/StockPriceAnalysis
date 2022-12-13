@@ -14,8 +14,11 @@ def get_stock_codes():
 
 # when you click the button
 def button_command():
+    #entry1 and choice are global variables (declared under gui function)
     # get() method gets the text that you write in the entry box
     var1 = entry1.get()
+    get_choice = choice.get()
+    get_days = days.get()
 
     #calling module 
     matrix = ansys_project.main(var1)
@@ -32,21 +35,28 @@ def gui(window_title):
     
     
     #to add dropdown items
+    global choice
     OPTIONS = get_stock_codes()
     variable = StringVar(root)
     variable.set(OPTIONS[0]) # 0 is the default value
-    w = OptionMenu(root, variable, *OPTIONS)
-    w.pack()
+    choice = OptionMenu(root, variable, *OPTIONS)
+    choice.pack()
 
-
-    text1 = Label(root, text="Stock Code", width=17)
+    text1 = Label(root, text="Stock Code:", width=17)
     text1.pack()
     global entry1
     entry1 = Entry(root, width=20)
     entry1.pack()
+    
+    text2 = Label(root, text="Based on How Many Days:", width=17)
+    text2.pack()
+    global days
+    days = Entry(root, width=20)
+    days.pack()
 
     spacer1 = Label(root, text="")
     spacer1.pack()
+    
     # we are calling button_command function in Button
     Button(root, text="Predict", width=17, command=button_command).pack()
     spacer2 = Label(root, text="")
@@ -63,6 +73,10 @@ def gui(window_title):
 
     # to see the window on the screen
     root.mainloop()
+
+
+
+
 
 
 if __name__ == "__main__":
