@@ -1,6 +1,5 @@
 import os
 from tkinter import *
-import ansys_project
 import numpy as np
 
 # when you click the button
@@ -10,11 +9,13 @@ def button_command():
     var2 = int(entry2.get())
     var3 = int(entry3.get())
 
-    #calling module 
+    '''
+    #calling module example:
     matrix = ansys_project.main(var1, var2, var3)
 
     # insert() method send the result to Textbox
     output.insert(END, matrix)
+    '''
     return None
     
 def gui(window_title):
@@ -62,4 +63,4 @@ def gui(window_title):
 
 
 if __name__ == "__main__":
-    gui("TEI Project")
+    gui("Stock Price Pred. (LSTM)")
