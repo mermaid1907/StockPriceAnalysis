@@ -1,6 +1,16 @@
 import os
-from tkinter import *
 import numpy as np
+import pandas as pd
+from tkinter import *
+
+#reading stock codes from scrapped file
+def get_stock_codes():
+    codes = list()
+    data = pd.read_csv('C:\\Users\\Elif Karagoz\\Desktop\\pred\\stock_code_scrap\\stock_code_list.csv', index_col=0)
+    for code in data['Code']:
+        codes.append(code)
+        
+    return codes
 
 # when you click the button
 def button_command():
@@ -8,7 +18,7 @@ def button_command():
     var1 = entry1.get()
 
     #calling module 
-    matrix = ansys_project.main(var1, var2, var3)
+    matrix = ansys_project.main(var1)
 
     # insert() method send the result to Textbox
     output.insert(END, matrix)
@@ -19,13 +29,21 @@ def gui(window_title):
     # to set the window size
     # root.geometry('400x350')
     root.title(window_title)
+    
+    
+    #to add dropdown items
+    OPTIONS = get_stock_codes()
+    variable = StringVar(root)
+    variable.set(OPTIONS[0]) # 0 is the default value
+    w = OptionMenu(root, variable, *OPTIONS)
+    w.pack()
+
 
     text1 = Label(root, text="Stock Code", width=17)
     text1.pack()
     global entry1
     entry1 = Entry(root, width=20)
     entry1.pack()
-
 
     spacer1 = Label(root, text="")
     spacer1.pack()
@@ -49,3 +67,4 @@ def gui(window_title):
 
 if __name__ == "__main__":
     gui("Stock Price Pred.")
+    
