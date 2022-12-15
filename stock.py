@@ -1,4 +1,3 @@
-import datetime
 import numpy as np
 import pandas as pd
 import yfinance as yf
@@ -12,18 +11,18 @@ from sklearn.model_selection import train_test_split
 
 class Stock():
     
-    def __init__(self, days):
+    def __init__(self, chosen_stock, days):
+        self.chosen_stock = chosen_stock
         self.days = days
         self.today = date.today().strftime("%Y-%m-%d")
         self.from_date = (date.today() - timedelta(days=self.days)).strftime("%Y-%m-%d")
+        self.data = self.download_data()
         
-    def download_data(self, stock_list):
-        self.stock_list = stock_list
-        for stock_code in self.stock_list:
-            self.data = yf.download(stock_code, start=self.from_date, end=self.today, progress=False)
-            self.data["Date"] = self.data.index
-            self.data = self.data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]]
-            self.data.reset_index(drop=True, inplace=True)
+    def download_data(self):
+        data = yf.download(self.chosen_stock, start=self.from_date, end=self.today, progress=False)
+        data["Date"] = self.data.index
+        data = self.data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]]
+        data.reset_index(drop=True, inplace=True)
             #print(stock_code, self.data.tail(5))
     
     def lstm_train_test(self):
@@ -52,10 +51,9 @@ class Stock():
                 
 if __name__ == "__main__":
     days = 50
-    #stock_list = ["AAL","AAN","AAWW","ADTN"]
-    stock_list = ["AAL"]
-    callStock = Stock(days)
-    callStock.download_data(stock_list)
+    chosen_stock = "AAL"
+    callStock = Stock(chosen_stock,days)
+    callStock.download_data()
     callStock.lstm_train_test()
     
         

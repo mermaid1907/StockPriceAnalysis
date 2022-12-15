@@ -6,7 +6,7 @@ from tkinter import *
 #reading stock codes from scrapped file
 def get_stock_codes():
     codes = list()
-    data = pd.read_csv('C:\\Users\\Elif Karagoz\\Desktop\\pred\\stock_code_scrap\\stock_code_list.csv', index_col=0)
+    data = pd.read_csv('C:\\Users\\ASUS\\PythonProjects\\StockPriceAnalysis\\stock_code_scrap\\stock_code_list.csv', index_col=0)
     for code in data['Code']:
         codes.append(code)
         
@@ -73,11 +73,6 @@ def gui(window_title):
 
     # to see the window on the screen
     root.mainloop()
-
-
-
-
-
 
 if __name__ == "__main__":
     gui("Stock Price Pred.")
