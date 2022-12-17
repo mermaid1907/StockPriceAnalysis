@@ -16,13 +16,12 @@ class Stock():
         self.days = days
         self.today = date.today().strftime("%Y-%m-%d")
         self.from_date = (date.today() - timedelta(days=self.days)).strftime("%Y-%m-%d")
-        self.data = self.download_data()
         
     def download_data(self):
-        data = yf.download(self.chosen_stock, start=self.from_date, end=self.today, progress=False)
-        data["Date"] = self.data.index
-        data = self.data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]]
-        data.reset_index(drop=True, inplace=True)
+        self.data = yf.download(self.chosen_stock, start=self.from_date, end=self.today, progress=False)
+        self.data["Date"] = self.data.index
+        self.data = self.data[["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"]]
+        self.data.reset_index(drop=True, inplace=True)
             #print(stock_code, self.data.tail(5))
     
     def lstm_train_test(self):

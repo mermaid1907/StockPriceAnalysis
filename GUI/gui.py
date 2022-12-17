@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from tkinter import *
+import stock
 
 #reading stock codes from scrapped file
 def get_stock_codes():
@@ -9,7 +10,6 @@ def get_stock_codes():
     data = pd.read_csv('C:\\Users\\ASUS\\PythonProjects\\StockPriceAnalysis\\stock_code_scrap\\stock_code_list.csv', index_col=0)
     for code in data['Code']:
         codes.append(code)
-        
     return codes
 
 # when you click the button
@@ -17,11 +17,13 @@ def button_command():
     #entry1 and choice are global variables (declared under gui function)
     # get() method gets the text that you write in the entry box
     var1 = entry1.get()
-    get_choice = choice.get()
+    #get_choice = choice.get()
     get_days = days.get()
+    callStock = stock.Stock(var1, int(get_days))
+    callStock.download_data()
 
     #calling module 
-    matrix = ansys_project.main(var1)
+    matrix = callStock.lstm_train_test()
 
     # insert() method send the result to Textbox
     output.insert(END, matrix)
@@ -33,7 +35,7 @@ def gui(window_title):
     # root.geometry('400x350')
     root.title(window_title)
     
-    
+    """
     #to add dropdown items
     global choice
     OPTIONS = get_stock_codes()
@@ -41,14 +43,15 @@ def gui(window_title):
     variable.set(OPTIONS[0]) # 0 is the default value
     choice = OptionMenu(root, variable, *OPTIONS)
     choice.pack()
-
+    """
+    
     text1 = Label(root, text="Stock Code:", width=17)
     text1.pack()
     global entry1
     entry1 = Entry(root, width=20)
     entry1.pack()
     
-    text2 = Label(root, text="Based on How Many Days:", width=17)
+    text2 = Label(root, text="Days:", width=17)
     text2.pack()
     global days
     days = Entry(root, width=20)
