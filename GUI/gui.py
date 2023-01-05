@@ -62,30 +62,33 @@ def gui(window_title):
     choice.pack()
     """
     
-    text1 = Label(root, text="Stock Code:", width=17)
+    root.configure(bg = "#698ea8")
+    
+    text1 = Label(root, text="Stock Code:", bg= "#97ccf0", width=17)
     text1.pack()
     global entry1
-    entry1 = Entry(root, width=20)
+    entry1 = Entry(root, bg= "#d5eaf7", width=20)
     entry1.pack()
     
-    text2 = Label(root, text="Days:", width=17)
+    text2 = Label(root, text="Days:", bg= "#97ccf0", width=17)
     text2.pack()
     global days
-    days = Entry(root, width=20)
+    days = Entry(root, bg= "#d5eaf7", width=20)
     days.pack()
 
     spacer1 = Label(root, text="")
     spacer1.pack()
     
     # we are calling button_command function in Button
-    Button(root, text="Predict", width=17, command=button_command).pack()
+    Button(root, text="Predict", width=17, bg = "#97ccf0", command=button_command).pack()
+    
     spacer2 = Label(root, text="")
     spacer2.pack()
 
     # scrol bar and output box
     scroll = Scrollbar(root)
     global output
-    output = Text(root, height=8, width=50)
+    output = Text(root, bg= "#d5eaf7", height=8, width=50)
     scroll.pack(side=RIGHT, fill=Y)
     output.pack(side=LEFT, fill=Y)
     scroll.config(command=output.yview)
