@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from tkinter import *
 import stock
+from PIL import ImageTk, Image
 
 #reading stock codes from scrapped file
 def get_stock_codes():
@@ -19,14 +20,30 @@ def button_command():
     var1 = entry1.get()
     #get_choice = choice.get()
     get_days = days.get()
-    callStock = stock.Stock(var1, int(get_days))
-    callStock.download_data()
-
-    #calling module 
-    matrix = callStock.lstm_train_test()
-
-    # insert() method send the result to Textbox
-    output.insert(END, matrix)
+    
+    if int(get_days) == 1:
+        callStock = stock.Stock(var1, int(get_days))
+        callStock.download_data()
+        #calling module 
+        matrix = callStock.lstm_train_test()
+        # insert() method send the result to Textbox
+        output.insert(END, f"{get_days} day later: \n")
+        output.insert(END, f"Open: {matrix[0]}\nHigh: {matrix[1]}\nClose: {matrix[2]}\n")
+        
+    elif int(get_days) > 1:
+        callStock = stock.Stock(var1, int(get_days))
+        callStock.download_data()
+        #calling module 
+        matrix = callStock.lstm_train_test()
+        # insert() method send the result to Textbox
+        output.insert(END, f"{get_days} days later: \n")
+        output.insert(END, f"Open: {matrix[0]}\nHigh: {matrix[1]}\nClose: {matrix[2]}\n")
+        
+    else:
+        # insert() method send the result to Textbox
+        output.insert(END, "Not valid!\n")
+    
+    
     return None
     
 def gui(window_title):

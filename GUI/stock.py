@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import yfinance as yf
 import plotly.graph_objects as go
 import tensorflow_estimator as tf
@@ -16,7 +17,7 @@ class Stock():
         self.chosen_stock = chosen_stock
         self.days = days
         self.today = date.today().strftime("%Y-%m-%d")
-        self.from_date = (date.today() - timedelta(days=self.days)).strftime("%Y-%m-%d")
+        self.from_date = (date.today() - timedelta(days=1000)).strftime("%Y-%m-%d")
         
     def download_data(self):
         self.data = yf.download(self.chosen_stock, start=self.from_date, end=self.today, progress=False)
@@ -26,23 +27,22 @@ class Stock():
             #print(stock_code, self.data.tail(5))
     
     def lstm_train_test(self):
-        x = self.data[["Open","High","Low","Volume"]]
+        x = self.data[["Open","High","Low", "Close", "Volume"]]
         x = x.to_numpy()
         
-        y = self.data["Close"]
+        y = self.data[["Open", "High", "Close"]]
         y = y.to_numpy()
         
         scaler = MinMaxScaler(feature_range=(0,1))
         scaled_data = scaler.fit_transform(y.reshape(-1,1))
         
-        xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.3, random_state=10) 
+        xtrain, xtest, ytrain, ytest = train_test_split(x[:-1*self.days,:], y[self.days:,:], test_size=0.3, random_state=10) 
         
         model = Sequential()
         
         model.add(LSTM(128, return_sequences=True, input_shape= (xtrain.shape[1], 1)))
         model.add(LSTM(64, return_sequences=False))
-        model.add(Dense(25))
-        model.add(Dense(1))
+        model.add(Dense(3))
         model.summary()
         
         model.compile(optimizer='adam', loss='mean_squared_error')
@@ -56,12 +56,28 @@ class Stock():
         
         print(rmse)
         
-        #features = [Open, High, Low, Adj Close, Volume]
-        features = np.array(xtest)
-        return model.predict(features)
+        print("\n----------------------------------------------\n")
+        
+        #features = [Open, High, Low, Close, Volume]
+        features = np.array(x)
+        prediction = model.predict(features)
+        
+        
+        # Visualizing the results
+        plt.plot(self.data["Date"],x[:,0], color = "red", label = "Real Stock Price")
+        plt.plot(self.data["Date"],prediction[:,0], color = "blue", label = "Predicted Stock Price")
+        frame = plt.gca()
+        frame.axes.get_xaxis().set_visible(False)
+        plt.title('Stock Price Prediction')
+        plt.xlabel('Time')
+        plt.ylabel('Stock Price')
+        plt.legend()
+        plt.show()
+        print(prediction[-1,:])
+        return prediction[-1,:]
                 
 if __name__ == "__main__":
-    days = 50
+    days = 3
     chosen_stock = "AAL"
     callStock = Stock(chosen_stock,days)
     callStock.download_data()

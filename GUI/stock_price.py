@@ -75,9 +75,9 @@ class Stock():
         self.model.fit(X_train, Y_train, epochs = 100, batch_size = 32)
         
         # Reshape the test data
-        self.dataset_train = self.data.iloc[:half_of_last, 1:2]
+        dataset_train = self.data.iloc[:half_of_last, 1:2]
         dataset_test = self.data.iloc[half_of_last:, 1:2]
-        dataset_total = pd.concat((self.dataset_train, dataset_test), axis = 0)
+        dataset_total = pd.concat((dataset_train, dataset_test), axis = 0)
         inputs = dataset_total[len(dataset_total) - len(dataset_test) - half_of_half:].values
         inputs = inputs.reshape(-1,1)
         inputs = scaler.transform(inputs)
@@ -111,7 +111,9 @@ class Stock():
         prediction = list()
         
         for i in range(self.days):
-            scaled_today_price_stock = scaler.fit_transform(np.reshape(today_price_stock, (2,1)))
+            scaled_today_price_stock = scaler.fit_transform(np.reshape(today_price_stock, 
+                                                                       (today_price_stock[0],
+                                                                        today_price_stock[1], 1)))
             print(scaled_today_price_stock.shape)
             print(scaled_today_price_stock)
             input_tensor = np.expand_dims(scaled_today_price_stock[0], axis=0)
